@@ -8,12 +8,11 @@ const createToken = (id) => {
 };
 
 module.exports.signup_get = (req, res) => {
-  res.render('signup');
+  res.send("Handle from frontend")
 }
 
 module.exports.login_get = (req, res) => {
-  res.send(process.env.SECRET)
-  res.render('login');
+  res.send("Handle from frontend")
 }
 
 module.exports.signup_post = async (req, res) => {

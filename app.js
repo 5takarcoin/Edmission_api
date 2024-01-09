@@ -3,6 +3,8 @@ const express = require("express")
 const mongoose = require("mongoose")
 const cookieParser = require('cookie-parser');
 
+const { requireAuth, checkUser } = require("./middleware/authMiddleware")
+
 const authRoutes = require("./routes/authRoutes")
 const dataRoutes = require("./routes/dataRoutes")
 
@@ -19,11 +21,7 @@ mongoose.connect(process.env.MONGO_URL)
     })
     .catch(err => console.log(err))
 
-app.get("/", (req, res) => {
-    res.cookie('haha', 'cookied')
-    res.cookie('nana', 'biscuit')
-
-    res.send(req.cookies.haha)
-})
 app.use("/", authRoutes)
 app.use("/api", dataRoutes)
+
+app.get("/", requireAuth, (req, res) => res.send("Lastu"))
