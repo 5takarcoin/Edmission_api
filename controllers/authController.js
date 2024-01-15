@@ -8,11 +8,11 @@ const createToken = (id) => {
 };
 
 module.exports.signup_get = (req, res) => {
-  res.send("Handle from frontend")
+  res.send({ name: null})
 }
 
 module.exports.login_get = (req, res) => {
-  res.send("Handle from frontend")
+  res.send(null)
 }
 
 module.exports.signup_post = async (req, res) => {
@@ -22,6 +22,7 @@ module.exports.signup_post = async (req, res) => {
         res.cookie('jwt', token, { httpOnly: true });
         res.status(201).json({ user: user._id });
     } catch(err) {
+      console.log(err)
         const errors = handleErrors(err)
         res.status(400).json({ errors })
     }
@@ -33,7 +34,7 @@ module.exports.login_post = async (req, res) => {
         const user = await User.login(username, password)
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true });
-        res.status(200).json({ user: user._id });
+        res.status(200).json({ user: user._id, name: user.name });
     } catch(err) {
         const errors = handleErrors(err)
         res.status(400).json({ errors })

@@ -2,6 +2,7 @@ require("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
 const cookieParser = require('cookie-parser');
+const cors = require('cors')
 
 const { requireAuth, checkUser } = require("./middleware/authMiddleware")
 
@@ -10,6 +11,7 @@ const dataRoutes = require("./routes/dataRoutes")
 
 const app = express()
 
+app.use(cors({ credentials: true, origin: 'http://localhost:3000'}))
 app.use(express.json())
 app.use(cookieParser())
 
@@ -22,6 +24,6 @@ mongoose.connect(process.env.MONGO_URL)
     .catch(err => console.log(err))
 
 app.use("/", authRoutes)
-app.use("/api", dataRoutes)
+app.use("/api",requireAuth, dataRoutes)
 
 app.get("/", requireAuth, (req, res) => res.send("Lastu"))
