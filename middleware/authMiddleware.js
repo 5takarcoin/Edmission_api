@@ -27,10 +27,32 @@ const requireAuth = (req, res, next) => {
           res.locals.user = null;
           next();
         } else {
-          console.log("Decoded")
           let user = await User.findById(decodedToken.id);
+          console.log(user)
           res.locals.user = user;
+          console.log(res.locals)
           next();
+        }
+      });
+    } else {
+      res.locals.user = null;
+      next();
+    }
+  };
+
+  const checkAdmin = (req, res, next) => {
+    const token = req.cookies.jwt;
+    if (token) {
+      jwt.verify(token, process.env.SECRET, async (err, decodedToken) => {
+        if (err) {
+          res.locals.user = null;
+          res.redirect('/somewhere');
+        } else {
+          let user = await User.findById(decodedToken.id);
+          console.log(user)
+          if (!user.isAdmin)
+            res.redirect('/not_admin');
+          else next()
         }
       });
     } else {
@@ -40,4 +62,4 @@ const requireAuth = (req, res, next) => {
   };
   
   
-  module.exports = { requireAuth, checkUser };
+  module.exports = { requireAuth, checkUser, checkAdmin };

@@ -12,7 +12,17 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    password: String,
+    password: {
+        type: String,
+        required: true,
+    },
+    image: {
+        type: String,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    }
 })
 
 UserSchema.pre('save', async function(next) {

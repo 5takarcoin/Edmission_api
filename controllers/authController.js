@@ -17,7 +17,8 @@ module.exports.login_get = (req, res) => {
 
 module.exports.signup_post = async (req, res) => {
     try{
-        const user = await User.create(req.body)
+        const newUser = { ...req.body, image: req.file.filename}
+        const user = await User.create(newUser)
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true });
         res.status(201).json({ user: user._id });
@@ -34,7 +35,7 @@ module.exports.login_post = async (req, res) => {
         const user = await User.login(username, password)
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true });
-        res.status(200).json({ user: user._id, name: user.name });
+        res.status(200).json({ user: user._id, name: user.name, image: user.image });
     } catch(err) {
         const errors = handleErrors(err)
         res.status(400).json({ errors })

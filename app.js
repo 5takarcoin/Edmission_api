@@ -14,6 +14,7 @@ const app = express()
 app.use(cors({ credentials: true, origin: 'http://localhost:3000'}))
 app.use(express.json())
 app.use(cookieParser())
+app.use(express.static("public"))
 
 mongoose.connect(process.env.MONGO_URL)
     .then(() => {
@@ -26,4 +27,4 @@ mongoose.connect(process.env.MONGO_URL)
 app.use("/", authRoutes)
 app.use("/api",requireAuth, dataRoutes)
 
-app.get("/", requireAuth, (req, res) => res.send("Lastu"))
+app.get("/", checkUser, (req, res) => res.send("Lastu"))
