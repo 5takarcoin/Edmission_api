@@ -17,7 +17,7 @@ module.exports.login_get = (req, res) => {
 
 module.exports.signup_post = async (req, res) => {
     try{
-        const newUser = { ...req.body, image: req.file.filename}
+        const newUser = { ...req.body, image: req.file?.filename}
         const user = await User.create(newUser)
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true });

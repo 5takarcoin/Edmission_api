@@ -5,6 +5,10 @@ const ReviewSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    stars: {
+        type: Number,
+        required: true,
+    },
     by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

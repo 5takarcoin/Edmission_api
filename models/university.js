@@ -99,11 +99,12 @@ const UniSchema = new mongoose.Schema({
         clubs: [String],
     },
     reviews:[{
-
         type: mongoose.Schema.Types.ObjectId,
         ref: "Review"
     }],
     notable_alumni: [notableAlumniSchema]
 })
+
+// UniSchema.virtual()
 
 module.exports = mongoose.model("University", UniSchema)
