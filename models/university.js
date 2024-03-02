@@ -1,13 +1,37 @@
 const mongoose = require('mongoose')
 
-const subnmajorSchema = new mongoose.Schema({something: String})
-const scholarshipListSchema = new mongoose.Schema({something: String})
-const quotaListSchema = new mongoose.Schema({something: String})
-
-const notableAlumniSchema = new mongoose.Schema({
+const subnmajorSchema = new mongoose.Schema({
+    submaj: String,
+    seats: Number,
+    profs: Number,
+    lects: Number,
+    creds: Number,
+    estlow: Number,
+    esthigh: Number,
+    syl: String,
+})
+const scholarshipListSchema = new mongoose.Schema({
     name: String,
-    desc: String,
-    img: String,
+    amount: Number,
+    noyears: Number,
+    requirements: String,
+    details: String,
+})
+const quotaListSchema = new mongoose.Schema({
+    name: String,
+    requirements: String,
+    details: String,
+})
+
+// const notableAlumniSchema = new mongoose.Schema({
+//     name: String,
+//     desc: String,
+//     img: String,
+// })
+
+const rankingSchema = new mongoose.Schema({
+    position: string,
+    ranking: string,
 })
 
 const UniSchema = new mongoose.Schema({
@@ -52,7 +76,15 @@ const UniSchema = new mongoose.Schema({
         }
     },
     rankings: {
-        type: String
+        // type: String
+        type: {
+            qs: {
+                type: [rankingSchema]
+            },
+            the: {
+                type: [rankingSchema]
+            }
+        }
     },
     admission_details: {
         type: {
@@ -102,7 +134,11 @@ const UniSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Review"
     }],
-    notable_alumni: [notableAlumniSchema]
+    // notable_alumni: [notableAlumniSchema]
+    notable_alumni: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Alumni"
+    }]
 })
 
 // UniSchema.virtual()

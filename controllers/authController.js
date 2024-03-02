@@ -1,4 +1,5 @@
-const User = require("../models/user")
+const User = require("../models/user");
+const uploadOnCloudinary = require("../utils/cloudinary");
 const handleErrors = require("../utils/errorhandler")
 
 const jwt = require("jsonwebtoken")
@@ -17,11 +18,17 @@ module.exports.login_get = (req, res) => {
 
 module.exports.signup_post = async (req, res) => {
     try{
-        const newUser = { ...req.body, image: req.file?.filename}
+        const imageLocalPath = req.file?.path;
+        url = "https://i.stack.imgur.com/l60Hf.png"
+        if(imageLocalPath) {
+          const image = await uploadOnCloudinary(imageLocalPath)
+          url = image.url
+        }
+        const newUser = { ...req.body, image: url}
         const user = await User.create(newUser)
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true });
-        res.status(201).json({ user: user._id });
+        res.status(201).json({ user: user._id, image: url });
     } catch(err) {
       console.log(err)
         const errors = handleErrors(err)
@@ -35,7 +42,7 @@ module.exports.login_post = async (req, res) => {
         const user = await User.login(username, password)
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true });
-        res.status(200).json({ user: user._id, name: user.name, image: user.image });
+        res.status(200).json({ user: user._id, name: user.name, username: user.username, image: user.image });
     } catch(err) {
         const errors = handleErrors(err)
         res.status(400).json({ errors })
