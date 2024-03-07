@@ -1,6 +1,7 @@
 const User = require("../models/user")
 const University = require("../models/university")
 const handleErrors = require("../utils/errorhandler")
+const uploadOnCloudinary = require("../utils/cloudinary")
 
 module.exports.get_users = async (req, res) => {
     try{
@@ -28,9 +29,26 @@ module.exports.get_user = async (req, res) => {
 }
 
 module.exports.add_uni = async (req, res) => {
+    // try{
+    //     const uni = await University.create(req.body)
+    //     res.status(201).json({ uni: uni._id });
+    // } catch(err) {
+    //   console.log(err)
+    //     const errors = handleErrors(err)
+    //     res.status(400).json({ errors })
+    // }
+
     try{
-        const uni = await University.create(req.body)
-        res.status(201).json({ uni: uni._id });
+        const imageLocalPath = req.file?.path;
+        url = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
+        if(imageLocalPath) {
+          const image = await uploadOnCloudinary(imageLocalPath)
+          url = image.url
+        }
+        const newUni = { ...req.body, img: url}
+
+        const uni = await University.create(newUni)
+        res.status(201).json(uni);
     } catch(err) {
       console.log(err)
         const errors = handleErrors(err)

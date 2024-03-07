@@ -19,13 +19,14 @@ const UserSchema = new mongoose.Schema({
     image: {
         type: String,
     },
-    isAdmin: {
+    accType: {
         type: Boolean,
-        default: false,
+        default: ["Student"],
+        enum: ["Student", "University", "Admin"]
     }
 })
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function(next) {  
     this.password = this.password = await bcrypt.hash(this.password, 10);
     console.log(this.password)
     next()

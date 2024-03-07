@@ -30,8 +30,8 @@ const quotaListSchema = new mongoose.Schema({
 // })
 
 const rankingSchema = new mongoose.Schema({
-    position: string,
-    ranking: string,
+    position: String,
+    ranking: String,
 })
 
 const UniSchema = new mongoose.Schema({
@@ -95,12 +95,12 @@ const UniSchema = new mongoose.Schema({
             },
             selectionprocedure: String,
             quota: Boolean,
-            scholarship: String,
+            scholarship: Boolean,
         }
     },
     application_details: {
         website: String,
-        deadline: Date,
+        deadline: String,
         fee: String,
         requirements: String,
     },

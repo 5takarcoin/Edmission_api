@@ -25,6 +25,6 @@ mongoose.connect(process.env.MONGO_URL)
     .catch(err => console.log(err))
 
 app.use("/", authRoutes)
-app.use("/api",requireAuth, dataRoutes)
+app.use("/api", dataRoutes)
 
 app.get("/", checkUser, (req, res) => res.send("Lastu"))
