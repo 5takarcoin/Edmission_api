@@ -13,7 +13,8 @@ module.exports.signup_get = (req, res) => {
 }
 
 module.exports.login_get = (req, res) => {
-  res.send(null)
+  console.log(req.body)
+  res.send(req.body)
 }
 
 module.exports.signup_post = async (req, res) => {
@@ -37,6 +38,7 @@ module.exports.signup_post = async (req, res) => {
 }
 
 module.exports.login_post = async (req, res) => {
+  console.log(req.body)
     try{
         const { username, password } = req.body
         const user = await User.login(username, password)
@@ -56,7 +58,6 @@ module.exports.logout_get = (req, res) => {
 
 module.exports.current_user = (req, res) => {
   const token = req.cookies.jwt;
-  console.log(token)
   if (token) {
     jwt.verify(token, process.env.SECRET, async (err, decodedToken) => {
       if (err) {
@@ -65,7 +66,6 @@ module.exports.current_user = (req, res) => {
       } else {
         let user = await User.findById(decodedToken.id);
         res.send(user);
-        console.log("Valo valo")
       }
     });
   } else {

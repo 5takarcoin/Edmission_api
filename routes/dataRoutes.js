@@ -13,9 +13,16 @@ router.get('/users', dataController.get_users);
 router.get('/users/:username', dataController.get_user);
 router.get('/unis',  dataController.get_unis);
 router.post('/unis/filter',  dataController.get_filtered_unis);
-router.post('/unis/add', upload.fields(mulF), dataController.add_uni);
+router.post('/unis/add', upload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'logo', maxCount: 1 }
+  ]), dataController.add_uni);
+router.get('/unis/:id/reviews', dataController.get_all_reviews);
+router.post('/unis/:id/review', dataController.add_review);
 router.get('/unis/:id', dataController.get_uni);
-router.put('/unis/:id', upload.fields(mulF), dataController.update_uni);
-router.post('/reviews/add', checkStu, dataController.add_review);
+router.put('/unis/:id', upload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'logo', maxCount: 1 }
+  ]), dataController.update_uni);
 
 module.exports = router;
