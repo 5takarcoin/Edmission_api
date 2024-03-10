@@ -48,6 +48,9 @@ const UniSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    logo: {
+        type: String,
+    },
     location: {
         type: String,
         required: true,

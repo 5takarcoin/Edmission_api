@@ -10,4 +10,6 @@ router.post('/signup', upload.single('image'), authController.signup_post);
 router.post('/login', authController.login_post);
 router.get('/logout', authController.logout_get);
 
+router.get('/currUser', authController.current_user);
+
 module.exports = router;

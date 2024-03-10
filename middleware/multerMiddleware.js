@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
   },
 });
 
-var upload = multer({
+const upload = multer({
   storage: storage,
   limits: {
     fileSize: 10000000, // 1MB
@@ -35,6 +35,19 @@ var upload = multer({
         file.mimetype === "image/jpg" ||
         file.mimetype === "image/jpeg"
       ) {
+        req.img = file
+        req.tanvirMsg = "Keno Hobena"
+        cb(null, true);
+      } else {
+        cb(new Error("Only .jpg, .png or .jpeg format allowed!"));
+      }
+    } else if (file.fieldname === "logo") {
+      if (
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/jpeg"
+      ) {
+        req.logo = file
         cb(null, true);
       } else {
         cb(new Error("Only .jpg, .png or .jpeg format allowed!"));

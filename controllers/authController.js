@@ -53,3 +53,22 @@ module.exports.logout_get = (req, res) => {
     res.cookie('jwt', '', { maxAge: 1 });
     res.redirect('/');
   }
+
+module.exports.current_user = (req, res) => {
+  const token = req.cookies.jwt;
+  console.log(token)
+  if (token) {
+    jwt.verify(token, process.env.SECRET, async (err, decodedToken) => {
+      if (err) {
+        res.locals.user = null;
+        next();
+      } else {
+        let user = await User.findById(decodedToken.id);
+        res.send(user);
+        console.log("Valo valo")
+      }
+    });
+  } else {
+    res.send({})
+  }
+}

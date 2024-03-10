@@ -30,7 +30,7 @@ const checkUser = (req, res, next) => {
         let user = await User.findById(decodedToken.id);
         console.log(user)
         res.locals.user = user;
-        console.log(res.locals)
+        console.log(res.locals);
         next();
       }
     });
@@ -82,5 +82,30 @@ const checkUni = (req, res, next) => {
   }
 };
 
+const checkStu = (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (token) {
+    jwt.verify(token, process.env.SECRET, async (err, decodedToken) => {
+      if (err) {
+        res.locals.user = null;
+        res.status(401).json({ message: "Some Error" })
+      } else {
+        let user = await User.findById(decodedToken.id);
+        console.log(user)
+        if (user.accType !== 'Student')
+        res.status(401).json({ message: "User not Student" })
+        else
+        {
+          req.body.by = user._id
+          next()
+        } 
+      }
+    });
+  } else {
+    res.locals.user = null;
+    next();
+  }
+};
 
-module.exports = { requireAuth, checkUser, checkAdmin, checkUni };
+
+module.exports = { requireAuth, checkUser, checkAdmin, checkUni, checkStu };

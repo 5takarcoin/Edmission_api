@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
     },
     accType: {
-        type: Boolean,
+        type: String,
         default: ["Student"],
         enum: ["Student", "University", "Admin"]
     }

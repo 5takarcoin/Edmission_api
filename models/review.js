@@ -5,6 +5,10 @@ const ReviewSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    recommend: {
+        type: Boolean,
+        required: true,
+    },
     stars: {
         type: Number,
         required: true,
@@ -13,4 +17,8 @@ const ReviewSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     }
+}, {
+    timestamps: true
 })
+
+module.exports = mongoose.model("Review", ReviewSchema)
