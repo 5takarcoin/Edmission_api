@@ -32,19 +32,33 @@ module.exports.get_user = async (req, res) => {
 
 module.exports.add_uni = async (req, res) => {
     try {
-        const imageLocalPath = req.files['image'][0]?.path;
+        const imageLocalPath = req.files['image']?.[0]?.path;
         let url = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
         if (imageLocalPath) {
             const image = await uploadOnCloudinary(imageLocalPath)
             url = image.url
         }
-        const logoLocalPath = req.files['logo'][0]?.path;
-        let logoUrl = "wave_up.svg"
+        const logoLocalPath = req.files['logo']?.[0]?.path;
+        let logoUrl = ""
         if (logoLocalPath) {
             const logo = await uploadOnCloudinary(logoLocalPath)
             logoUrl = logo.url
         }
-        const newUni = { ...req.body, subject_majors: JSON.parse(req.body.subject_majors), img: url, logo: logoUrl }
+        const newRank = {
+            qs: [],
+            the: []
+        }
+
+        const other = {
+            rankings: {...newRank},
+            subject_majors: [], 
+            img: url, logo: logoUrl,
+            quota_list: [],
+            scholarship_list: []
+        }
+        const newUni = { ...req.body, ...other }
+
+        console.log("+++++++++++++++++++++++++++++++++++++++????????????????????")
         console.log(newUni)
         const uni = await University.create(newUni)
         res.status(201).json(uni);
@@ -149,11 +163,13 @@ module.exports.update_uni = async (req, res) => {
             qs: JSON.parse(req.body.rankings.qs),
             the: JSON.parse(req.body.rankings.the)
         }
-        console.log("Below new Rank")
-        console.log(newRank)
 
         const other = {
-            rankings: {...newRank}, subject_majors: JSON.parse(req.body.subject_majors), img: url, logo: logoUrl
+            rankings: {...newRank},
+            subject_majors: JSON.parse(req.body.subject_majors), 
+            img: url, logo: logoUrl,
+            quota_list: JSON.parse(req.body.quota_list),
+            scholarship_list: JSON.parse(req.body.scholarship_list)
         }
         const newUni = { ...req.body, ...other }
         console.log("++++++++++++++++++++++++++++++++")
