@@ -145,7 +145,17 @@ module.exports.update_uni = async (req, res) => {
             const logo = await uploadOnCloudinary(logoLocalPath)
             logoUrl = logo.url
         }
-        const newUni = { ...req.body, subject_majors: JSON.parse(req.body.subject_majors), img: url, logo: logoUrl }
+        const newRank = {
+            qs: JSON.parse(req.body.rankings.qs),
+            the: JSON.parse(req.body.rankings.the)
+        }
+        console.log("Below new Rank")
+        console.log(newRank)
+
+        const other = {
+            rankings: {...newRank}, subject_majors: JSON.parse(req.body.subject_majors), img: url, logo: logoUrl
+        }
+        const newUni = { ...req.body, ...other }
         console.log("++++++++++++++++++++++++++++++++")
         console.log(newUni.name)
         console.log(newUni)

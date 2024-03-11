@@ -144,6 +144,9 @@ const UniSchema = new mongoose.Schema({
     }]
 })
 
-// UniSchema.virtual()
+// UserSchema.virtual('fullName').get(function() {
+//     return `${this.firstName} ${this.lastName}`;
+//   });
+  
 
 module.exports = mongoose.model("University", UniSchema)
