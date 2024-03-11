@@ -34,9 +34,9 @@ module.exports.add_uni = async (req, res) => {
     try {
         const imageLocalPath = req.files['image'][0]?.path;
         let url = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
-        if(imageLocalPath) {
-          const image = await uploadOnCloudinary(imageLocalPath)
-          url = image.url
+        if (imageLocalPath) {
+            const image = await uploadOnCloudinary(imageLocalPath)
+            url = image.url
         }
         const logoLocalPath = req.files['logo'][0]?.path;
         let logoUrl = "wave_up.svg"
@@ -90,7 +90,7 @@ module.exports.get_uni = async (req, res) => {
         const uni = await University.find({ identifier: req.params.id }).populate({
             path: 'reviews',
             populate: 'by'
-          }).exec()
+        }).exec()
         res.send(uni)
     } catch (err) {
         ///////////////////////////////////////////////////////////////////
@@ -112,14 +112,18 @@ module.exports.add_review = async (req, res) => {
         const uni = nuni[0]._doc;
         let currRev = uni.reviews;
 
-        const all_revs = [...currRev, rev._id];
+        const all_revs = [rev._id, ...currRev];
 
-        const updated = { ...uni, reviews: all_revs}
-        const out = await University.findByIdAndUpdate(uni._id, updated).populate({
+        const updated = { ...uni, reviews: all_revs };
+        await University.findByIdAndUpdate(uni._id, updated);
+
+        const populatedUni = await University.findById(uni._id).populate({
             path: 'reviews',
             populate: 'by'
-          }).exec()
-        res.status(201).json(out.reviews);
+        }).exec();
+
+        console.log(populatedUni.reviews);
+        res.status(201).json(populatedUni.reviews);
     } catch (err) {
         console.log(err)
         const errors = handleErrors(err)
@@ -131,9 +135,9 @@ module.exports.update_uni = async (req, res) => {
     try {
         const imageLocalPath = req.files['image']?.[0]?.path;
         let url = req.body.img
-        if(imageLocalPath) {
-          const image = await uploadOnCloudinary(imageLocalPath)
-          url = image.url
+        if (imageLocalPath) {
+            const image = await uploadOnCloudinary(imageLocalPath)
+            url = image.url
         }
         const logoLocalPath = req.files['logo']?.[0]?.path;
         let logoUrl = req.body.logo
@@ -167,21 +171,3 @@ module.exports.get_all_reviews = async (req, res) => {
         res.status(400).json({ errors })
     }
 }
-
-
-// module.exports.add_review = async (req, res) => {
-//     try {
-//         const newUni = { ...req.body }
-//         const identi = req.params.id;
-//         const filter = { identifier: identi };
-//         const uni = await University.find(filter);
-//         const all_revs = uni.reviews.push(newUni);
-//         const updated = {...uni, reviews: all_revs}
-//         const out = await University.findByIdAndUpdate(uni._id, updated)
-//         res.status(201).json(out)
-//     } catch (err) {
-//         console.log(err)
-//         const errors = handleErrors(err)
-//         res.status(400).json({ errors })
-//     }
-// }
